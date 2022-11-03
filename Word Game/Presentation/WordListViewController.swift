@@ -12,11 +12,21 @@ import RxCocoa
 
 class WordListViewController: UIViewController {
     
+    //Private properties
+    
     private let viewModel : WordListViewModelProtocol!
     private let bag = DisposeBag()
     
+    private lazy var gameView : GameView = {
+        let view = Word_Game.GameView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        //        view.delegate = self
+        return view
+    }()
+    
+    
     // Dependency injection
-
+    
     init(viewModel: WordListViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -27,21 +37,25 @@ class WordListViewController: UIViewController {
     }
     
     // Lifecycle
-
+    
     override func loadView() {
         super.loadView()
-        self.configureViews()
+        view.addSubview(gameView)
+        self.setupSubviews()
         self.bindViews()
     }
     
-    private func configureViews(){
-        self.view.backgroundColor = .red
+    private func setupSubviews(){
+        NSLayoutConstraint.activate(
+            [gameView.topAnchor.constraint(equalTo: view.topAnchor),
+             gameView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+             gameView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+             gameView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
     }
-    
     
     private func bindViews(){
         self.viewModel.fetch()
-
     }
 }
 
