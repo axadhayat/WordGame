@@ -33,7 +33,6 @@ final class LocalRepository : Repository{
         do {
             let jsonData = try Data(contentsOf: pathUrl)
             let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .secondsSince1970
             let result = try decoder.decode(T.self, from: jsonData)
             completion(.success(result))
         } catch let error {
