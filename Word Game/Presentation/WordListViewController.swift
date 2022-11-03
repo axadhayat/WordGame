@@ -20,7 +20,7 @@ class WordListViewController: UIViewController {
     private lazy var gameView : GameView = {
         let view = Word_Game.GameView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        //        view.delegate = self
+        view.delegate = self
         return view
     }()
     
@@ -55,7 +55,27 @@ class WordListViewController: UIViewController {
     }
     
     private func bindViews(){
-        self.viewModel.fetch()
+        viewModel.wordPair
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] wordPair in
+                guard let self = self else { return }
+            self.gameView.setWordTitles(
+                englishWord: wordPair.text_eng,
+                spanishWord: wordPair.text_spa)
+        })
+        .disposed(by: bag)
+        
+        viewModel.startGame()
+    }
+}
+
+extension WordListViewController:GameViewDelegate{
+    func didAcceptTranslation() {
+        viewModel.didTapCorrect()
+    }
+    
+    func didRejectTranslation() {
+        viewModel.didTapReject()
     }
 }
 

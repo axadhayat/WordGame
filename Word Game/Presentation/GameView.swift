@@ -7,7 +7,14 @@
 
 import UIKit
 
+protocol GameViewDelegate : AnyObject{
+    func didAcceptTranslation()
+    func didRejectTranslation()
+}
+
 class GameView: UIView {
+    
+    weak var delegate:GameViewDelegate?
             
     //Private Properties
   
@@ -57,9 +64,10 @@ class GameView: UIView {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.text = "English"
-        lbl.textColor = .black
+        lbl.textColor = .darkText
         lbl.font = UIFont.boldSystemFont(ofSize: 30)
-        lbl.textAlignment = .right
+        lbl.textAlignment = .center
+        lbl.numberOfLines = 2
         return lbl
     }()
     
@@ -68,8 +76,9 @@ class GameView: UIView {
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.text = "Spanish"
         lbl.textColor = .black
-        lbl.font = UIFont.boldSystemFont(ofSize: 24)
-        lbl.textAlignment = .right
+        lbl.font = UIFont.italicSystemFont(ofSize: 24)
+        lbl.textAlignment = .center
+        lbl.numberOfLines = 0
         return lbl
     }()
     
@@ -115,10 +124,15 @@ class GameView: UIView {
         NSLayoutConstraint.activate(
             [resultStackView.topAnchor.constraint(equalTo: topAnchor, constant: 50),
              resultStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-             lblEnglishWord.centerXAnchor.constraint(equalTo: centerXAnchor),
+             
+             lblEnglishWord.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+             lblEnglishWord.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
              lblEnglishWord.centerYAnchor.constraint(equalTo: centerYAnchor),
-             lblSpanishWord.centerXAnchor.constraint(equalTo: centerXAnchor),
+             
+             lblSpanishWord.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+             lblSpanishWord.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
              lblSpanishWord.centerYAnchor.constraint(equalTo: centerYAnchor,constant: 40),
+             
              btnStackView.heightAnchor.constraint(equalToConstant: 50),
              btnStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
              btnStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
@@ -126,14 +140,21 @@ class GameView: UIView {
             ])
     }
     
+    // Public members
+    
+    func setWordTitles(englishWord:String, spanishWord:String){
+        lblEnglishWord.text = englishWord.capitalized
+        lblSpanishWord.text = spanishWord.capitalized
+    }
+
     // Action
     
     @objc func didTapCorrect(_ button: UIButton){
-        
+        delegate?.didAcceptTranslation()
     }
     
     @objc func didTapWrong(_ button: UIButton){
-        
+        delegate?.didRejectTranslation()
     }
     
 }

@@ -22,6 +22,7 @@
 		A64934CB2913D15600DE1C89 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A64934CA2913D15600DE1C89 /* RxSwift */; };
 		A64934CD2913D1B100DE1C89 /* Respository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64934CC2913D1B100DE1C89 /* Respository.swift */; };
 		A670EF662913D6A700A3A8F4 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A670EF652913D6A700A3A8F4 /* GameView.swift */; };
+		A670EF682913F7CD00A3A8F4 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = A670EF672913F7CD00A3A8F4 /* Game.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		A64934BA2913CE3200DE1C89 /* WordListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordListViewModel.swift; sourceTree = "<group>"; };
 		A64934CC2913D1B100DE1C89 /* Respository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Respository.swift; sourceTree = "<group>"; };
 		A670EF652913D6A700A3A8F4 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		A670EF672913F7CD00A3A8F4 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 			children = (
 				A64934862913B45E00DE1C89 /* AppDelegate.swift */,
 				A64934D12913D24300DE1C89 /* Presentation */,
+				A670EF692913F7DC00A3A8F4 /* Domain */,
 				A64934D02913D23D00DE1C89 /* Data */,
 				A649348F2913B45F00DE1C89 /* Assets.xcassets */,
 				A64934912913B45F00DE1C89 /* LaunchScreen.storyboard */,
@@ -156,6 +159,14 @@
 				A670EF652913D6A700A3A8F4 /* GameView.swift */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		A670EF692913F7DC00A3A8F4 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				A670EF672913F7CD00A3A8F4 /* Game.swift */,
+			);
+			path = Domain;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -299,6 +310,7 @@
 			files = (
 				A649348B2913B45E00DE1C89 /* WordListViewController.swift in Sources */,
 				A64934872913B45E00DE1C89 /* AppDelegate.swift in Sources */,
+				A670EF682913F7CD00A3A8F4 /* Game.swift in Sources */,
 				A64934BB2913CE3200DE1C89 /* WordListViewModel.swift in Sources */,
 				A64934CD2913D1B100DE1C89 /* Respository.swift in Sources */,
 				A670EF662913D6A700A3A8F4 /* GameView.swift in Sources */,
