@@ -6,15 +6,9 @@
 //
 
 import UIKit
-//
-protocol FormViewDelegate: AnyObject{
-    func didEnterValidUrl(url:String)
-}
 
 class GameView: UIView {
-        
-    weak var delegate:FormViewDelegate?
-    
+            
     //Private Properties
   
     private lazy var btnStackView: UIStackView = {
@@ -85,7 +79,7 @@ class GameView: UIView {
         btn.backgroundColor = .systemBlue
         btn.layer.cornerRadius = 24
         btn.setTitle("Correct", for: .normal)
-        btn.addTarget(self, action: #selector(didTapSubmit(_:)), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(didTapCorrect(_:)), for: .touchUpInside)
         return btn
     }()
     
@@ -95,7 +89,7 @@ class GameView: UIView {
         btn.backgroundColor = .systemRed
         btn.layer.cornerRadius = 24
         btn.setTitle("Wrong", for: .normal)
-        btn.addTarget(self, action: #selector(didTapSubmit(_:)), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(didTapWrong(_:)), for: .touchUpInside)
         return btn
     }()
     
@@ -132,23 +126,14 @@ class GameView: UIView {
             ])
     }
     
-    // Text field configurations
-    
-    private func configureTextField(forResult result:Bool){
-        
-    }
-    
     // Action
     
-    @objc func didTapSubmit(_ button: UIButton){
+    @objc func didTapCorrect(_ button: UIButton){
         
     }
-}
-
-// Text Field Delegate
-
-extension GameView : UITextFieldDelegate{
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        configureTextField(forResult: true)
+    
+    @objc func didTapWrong(_ button: UIButton){
+        
     }
+    
 }
