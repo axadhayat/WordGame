@@ -7,37 +7,69 @@
 
 import Foundation
 
-class GameActivity{
-    
+protocol GameDelegate : AnyObject{
+    func shouldFinishGame()
+}
+
+protocol Game: AnyObject{
+    var wordPairs:[WordPair] { get }
+    var probabality:Int { get }
+    var randomTranslationArray:[Int] { get }
+    var wrongAttempts:Int { get }
+    var rightAttempts:Int { get }
+    var currentIndex:Int { get }
+    var randomEngIndex:Int { get }
+    var randomSpanishIndex:Int { get }
+    func getWordPair() -> WordPair?
+    func resetGameCounters()
+    func generateRandomSpanishTranslations()
+    init(pairs:[WordPair], probability:Int)
+}
+
+class GameActivity: Game{
+   
     //Private properties
-    private var wordPairs:[WordPair]
+    internal var wordPairs:[WordPair]
+    private(set) var probabality: Int
     private(set) var wrongAttempts = 0
     private(set) var rightAttempts = 0
-    private var currentIndex = 0
-    private var randomEngIndex = 0
-    private var randomSpanishIndex = 0
-    private var randomTranslationArray:[Int] = []
+    private(set) var currentIndex = 0
+    private(set) var randomEngIndex = 0
+    private(set) var randomSpanishIndex = 0
+    private(set) var randomTranslationArray:[Int] = []
+    
+    weak var delegate:GameDelegate?
     
     // init
-    init(pairs:[WordPair]) {
-        wordPairs = pairs
+    required init(pairs:[WordPair], probability:Int) {
+        self.wordPairs = pairs
+        self.probabality = probability
     }
     
     // Public members
-    func makeAttempt(answer:Bool){
-        if answer{
-            if randomEngIndex == randomSpanishIndex{
-                rightAttempts = rightAttempts + 1
-            } else{
-                wrongAttempts = wrongAttempts + 1
+    func makeAttempt(answer:Bool?){
+        
+        if let answer = answer {
+            if answer{
+                if randomEngIndex == randomSpanishIndex{
+                    rightAttempts = rightAttempts + 1
+                } else{
+                    wrongAttempts = wrongAttempts + 1
+                }
+            }
+            else{
+                if randomEngIndex != randomSpanishIndex{
+                    rightAttempts = rightAttempts + 1
+                } else{
+                    wrongAttempts = wrongAttempts + 1
+                }
             }
         }
         else{
-            if randomEngIndex != randomSpanishIndex{
-                rightAttempts = rightAttempts + 1
-            } else{
-                wrongAttempts = wrongAttempts + 1
-            }
+            wrongAttempts = wrongAttempts + 1
+        }
+        if wrongAttempts == 3 || wrongAttempts + rightAttempts == 15{
+            delegate?.shouldFinishGame()
         }
     }
     
@@ -52,7 +84,7 @@ class GameActivity{
             resetGameCounters()
         }
             
-        generateRandomSpanishTranslations(probability: 4) // 4 = 25%
+        generateRandomSpanishTranslations()
         if let randomSpanishWordIndex = randomTranslationArray.randomElement(){
             let englishWord = wordPairs[currentIndex].text_eng
             let spanishRandomWord = wordPairs[randomSpanishWordIndex].text_spa
@@ -65,13 +97,13 @@ class GameActivity{
  
     
     // Private members
-    private func resetGameCounters(){
+    internal func resetGameCounters(){
         currentIndex = 0
         randomEngIndex = 0
         randomSpanishIndex = 0
     }
 
-    private func generateRandomSpanishTranslations(probability:Int){
+    internal func generateRandomSpanishTranslations(){
         randomTranslationArray.removeAll()
         randomTranslationArray.append(currentIndex)
 //TODO:- Put in iteration
