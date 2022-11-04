@@ -14,6 +14,8 @@ protocol WordListViewModelProtocol{
     func didTapReject()
     func startGame()
     var wordPair: PublishSubject<WordPair> { get }
+    var wrongAttempt: PublishSubject<Int> { get }
+    var rightAttempt: PublishSubject<Int> { get }
     var error: BehaviorRelay<String> { get }
 }
 
@@ -23,6 +25,8 @@ final class WordListViewModel : WordListViewModelProtocol{
     private var game:GameActivity?
     private var currentPairIndex = 0
     let wordPair = PublishSubject<WordPair>()
+    let wrongAttempt = PublishSubject<Int>()
+    let rightAttempt = PublishSubject<Int>()
     let error = BehaviorRelay<String>(value: "")
 
     // Dependency injection
@@ -46,9 +50,11 @@ final class WordListViewModel : WordListViewModelProtocol{
         }
     }
     
-    private func nextMove(){
-        if let game = game{
-            self.wordPair.onNext(game.getNextPair())
+    private func prepareForNextAttempt(){
+        if let game = game, let nextPair = game.getWordPair() {
+            self.wordPair.onNext(nextPair)
+            self.wrongAttempt.onNext(game.wrongAttempts)
+            self.rightAttempt.onNext(game.rightAttempts)
         }
     }
     
@@ -56,16 +62,27 @@ final class WordListViewModel : WordListViewModelProtocol{
 
 extension WordListViewModel{
     func startGame(){
-        if let game = game{
-            self.wordPair.onNext(game.getNextPair())
+        if let game = game, let nextPair = game.getWordPair() {
+            self.wordPair.onNext(nextPair)
+        }
+        else{
+            self.error.accept("Not enough values in dataset.")
         }
     }
     
     func didTapCorrect() {
-        nextMove()
+        if let game = game{
+            game.makeAttempt(answer: true)
+            prepareForNextAttempt()
+            print("WRONG ATTEMPS:\(game.wrongAttempts) ,RIGHT ATTEMPS:\(game.rightAttempts) ,")
+        }
     }
     
     func didTapReject() {
-        nextMove()
+        if let game = game{
+            game.makeAttempt(answer: false)
+            prepareForNextAttempt()
+            print("WRONG ATTEMPS:\(game.wrongAttempts) ,RIGHT ATTEMPS:\(game.rightAttempts) , ")
+        }
     }
 }

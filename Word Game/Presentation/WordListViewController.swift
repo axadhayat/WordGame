@@ -16,7 +16,6 @@ class WordListViewController: UIViewController {
     
     private let viewModel : WordListViewModelProtocol!
     private let bag = DisposeBag()
-    
     private lazy var gameView : GameView = {
         let view = Word_Game.GameView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +36,6 @@ class WordListViewController: UIViewController {
     }
     
     // Lifecycle
-    
     override func loadView() {
         super.loadView()
         view.addSubview(gameView)
@@ -62,6 +60,22 @@ class WordListViewController: UIViewController {
             self.gameView.setWordTitles(
                 englishWord: wordPair.text_eng,
                 spanishWord: wordPair.text_spa)
+        })
+        .disposed(by: bag)
+        
+        viewModel.wrongAttempt
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] attemptCount in
+                guard let self = self else { return }
+            self.gameView.setWrongAttempt(count: attemptCount)
+        })
+        .disposed(by: bag)
+        
+        viewModel.rightAttempt
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] attemptCount in
+                guard let self = self else { return }
+            self.gameView.setRightAttempt(count: attemptCount)
         })
         .disposed(by: bag)
         
