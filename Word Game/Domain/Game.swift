@@ -37,6 +37,9 @@ class GameActivity: Game{
     private(set) var randomEngIndex = 0
     private(set) var randomSpanishIndex = 0
     private(set) var randomTranslationArray:[Int] = []
+    private var totalAttempts:Int{
+        return wrongAttempts + rightAttempts
+    }
     
     weak var delegate:GameDelegate?
     
@@ -47,8 +50,9 @@ class GameActivity: Game{
     }
     
     // Public members
+    /// User made an attempt by selecting button
+    /// - Parameter answer: Correct/Wrong button tapped, nil if didn't tapped anything 5 seconds passed. 
     func makeAttempt(answer:Bool?){
-        
         if let answer = answer {
             if answer{
                 if randomEngIndex == randomSpanishIndex{
@@ -66,9 +70,14 @@ class GameActivity: Game{
             }
         }
         else{
+            // If user haven't selected anything
             wrongAttempts = wrongAttempts + 1
         }
-        if wrongAttempts == 3 || wrongAttempts + rightAttempts == 15{
+       checkIfAttemptLimitReached()
+    }
+    
+    func checkIfAttemptLimitReached(){
+        if wrongAttempts == 3 || totalAttempts == 15{
             delegate?.shouldFinishGame()
         }
     }
