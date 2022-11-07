@@ -1,6 +1,14 @@
 # WordGame
 Small language word game.
 
+● Project tech Stack
+
+- MVVM
+- Programmatica views
+- Reactive Programming
+- Unit tests
+- Solid principles 
+
 ● How much time was invested
 
 Around 7-8 hours were invested in the development of this project.
