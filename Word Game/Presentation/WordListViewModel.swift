@@ -13,8 +13,10 @@ protocol WordListViewModelProtocol{
     func didTapCorrect()
     func didTapReject()
     func startGame()
+    func reStartGame()
     var wordPair: PublishSubject<WordPair> { get }
     var wrongAttempt: PublishSubject<Int> { get }
+    var endGame: PublishSubject<(Int,Int)> { get }
     var rightAttempt: PublishSubject<Int> { get }
     var error: BehaviorRelay<String> { get }
 }
@@ -35,6 +37,7 @@ final class WordListViewModel : WordListViewModelProtocol{
     let rightAttempt = PublishSubject<Int>()
     let error = BehaviorRelay<String>(value: "")
     var attemptTimer:Timer?
+    var endGame = PublishSubject<(Int, Int)>()
     
     // Dependency injection
 
@@ -74,7 +77,7 @@ final class WordListViewModel : WordListViewModelProtocol{
 
 extension WordListViewModel:GameDelegate{
     func shouldFinishGame() {
-        exit(0)
+        self.endGame.onNext((-1,-1))
     }
 }
 
@@ -86,6 +89,13 @@ extension WordListViewModel{
         }
         else{
             self.error.accept("Not enough values in dataset.")
+        }
+    }
+    
+    func reStartGame() {
+        if let game = game{
+            game.resetGameCounters()
+            prepareForNextAttempt()
         }
     }
     

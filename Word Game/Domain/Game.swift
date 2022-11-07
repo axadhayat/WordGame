@@ -110,6 +110,8 @@ class GameActivity: Game{
         currentIndex = 0
         randomEngIndex = 0
         randomSpanishIndex = 0
+        wrongAttempts = 0
+        rightAttempts = 0
     }
 
     internal func generateRandomSpanishTranslations(){

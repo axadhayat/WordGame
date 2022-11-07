@@ -23,6 +23,19 @@ class WordListViewController: UIViewController {
         return view
     }()
     
+    private lazy var alertView: UIAlertController = {
+        let view = UIAlertController.init(title: "Alert",message: "Please select", preferredStyle: .alert)
+        let okAction = UIAlertAction.init(title: "Restart", style: .default) { _ in
+            self.viewModel.reStartGame()
+        }
+        let cancelAction = UIAlertAction.init(title: "Quit", style: .cancel) { _ in
+            exit(0)
+        }
+        view.addAction(okAction)
+        view.addAction(cancelAction)
+        return view
+    }()
+    
     
     // Dependency injection
     
@@ -62,28 +75,41 @@ class WordListViewController: UIViewController {
                 spanishWord: wordPair.text_spa)
         })
         .disposed(by: bag)
-        
         viewModel.wrongAttempt
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] attemptCount in
                 guard let self = self else { return }
-            self.gameView.setWrongAttempt(count: attemptCount)
+            self.gameView.setWrongAttemptTitle(count: attemptCount)
         })
         .disposed(by: bag)
-        
         viewModel.rightAttempt
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] attemptCount in
                 guard let self = self else { return }
-            self.gameView.setRightAttempt(count: attemptCount)
+            self.gameView.setCorrectAttemptTitle(count: attemptCount)
         })
         .disposed(by: bag)
-        
+        viewModel.endGame
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] score in
+                guard let self = self else { return }
+                self.present(self.alertView, animated: true, completion: nil)
+        })
+        .disposed(by: bag)
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         viewModel.startGame()
     }
 }
 
 extension WordListViewController:GameViewDelegate{
+    func didAskforRestart() {
+        viewModel.reStartGame()
+    }
+    
     func didAcceptTranslation() {
         viewModel.didTapCorrect()
     }
